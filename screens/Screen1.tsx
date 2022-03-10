@@ -19,7 +19,6 @@ export default function Screen1() {
     const isHappy = useSelector((state: any) => state.chat.isHappy) // subscribe to redux store and select attribute (isHappy)
     const chatrooms: Chatroom[] = useSelector((state: any) => state.chat.chatrooms)
 
-    console.log("isHappy", isHappy);
     const dispatch = useDispatch()
 
     const handleAddChatroom = () => {

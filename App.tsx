@@ -20,9 +20,17 @@ const Tab = createBottomTabNavigator();
 function ChatStackNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Screen1" component={Screen1} />
-      <Stack.Screen name="Screen2" component={Screen2} />
-      <Stack.Screen name="Screen3" component={Screen3} />
+      <Stack.Screen name="Screen1" component={Screen1} options={{ headerShown: false }}/>
+      <Stack.Screen name="Screen2" component={Screen2} options={{ headerShown: false }}/>
+      <Stack.Screen name="Screen3" component={Screen3} options={{ headerShown: false }}/>
+    </Stack.Navigator>
+  );
+}
+function HomeChatStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Homescreen" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Screen1" component={Screen1} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 }
@@ -38,14 +46,14 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 
 export default function App() {
-  
+  ChatStackNavigator()
   return (
     <Provider store={store}>
-
+      
 
       <NavigationContainer>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Home" component={HomeChatStackNavigator} />
           <Tab.Screen name="Chat" component={ChatStackNavigator} />
           {/* <Tab.Screen name="Discover" component={DiscoverScreen} /> */}
           {/* <Tab.Screen name="Menu" component={MenuScreen} /> */}

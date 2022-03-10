@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 import { User } from '../entities/User';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,16 +21,32 @@ export default function HomeScreen() {
     const [passwordStr, setPasswordStr] = useState('')
     const [loginText, setLoginText] = useState('')
     const [loginPw, setLoginPw] = useState('')
-
+    const user: User = useSelector((state: any) => state.user.loggedInUser) // subscribe to redux store and select attribute (isHappy)
+    const validUser = useSelector((state: any) => state.user.validUser) // subscribe to redux store and select attribute (isHappy)
+    const dispatch = useDispatch()
+    
     const Stack = createNativeStackNavigator<StackParamList>();
     const Tab = createBottomTabNavigator();
     const navigation = useNavigation<ScreenNavigationType>()
 
-    const dispatch = useDispatch()
+    function test() {
+        console.log("FUNCTION CALLED TO FUCKING SWAP PAGE")
+    }
 
-    const user: User = useSelector((state: any) => state.user.loggedInUser) // subscribe to redux store and select attribute (isHappy)
-    const isHappy = useSelector((state: any) => state.user.tilted) // subscribe to redux store and select attribute (isHappy)
-    
+   // This code is for it to run for the first time when your component mounts. 
+   // Think of it as the previous componentDidMount function
+   useEffect(() => {
+    test() //not really needed here.. But just for another time.
+  }, []);
+
+  // This code is for it to run whenever your variable, timerOn, changes
+  useEffect(() => {
+    if (validUser) {
+      test();
+      navigation.navigate("Screen1");
+    }
+  }, [validUser]); // The second parameters are the variables this useEffect is listening to for changes.
+
 
     function handleAddUser () {
         const email = text;
@@ -44,8 +60,13 @@ export default function HomeScreen() {
         const pw = loginPw;
 
         dispatch(signin(email,pw))
+        componentDidMount()
     }
  
+    function componentDidMount(){
+        console.log("TEST FOR AT DET SKER");
+    }
+   
     return (
         
         <View style={styles.container}>
@@ -58,7 +79,7 @@ export default function HomeScreen() {
             <Text>Below is the current user email and id token:</Text> 
             <Text>{user.email}</Text>
             <Text>{user.idToken}</Text>
-            <Text>Is Michael happy? .. {isHappy.toString()} {"\n"} {"\n"} {"\n"} {"\n"}</Text>
+            <Text>Is Michael happy? .. {validUser.toString()} {"\n"} {"\n"} {"\n"} {"\n"}</Text>
             <Text>Log in using social networks {"\n"} {"\n"}</Text>
         <View style={styles.iconsDiv}>
             <TouchableOpacity onPress={() => {console.log("FACEBOOK")}}>

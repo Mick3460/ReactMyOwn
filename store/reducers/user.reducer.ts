@@ -3,12 +3,12 @@ import { SIGNUP, SIGNIN } from "../actions/user.actions";
 
 interface ReduxState {
     loggedInUser: User
-    tilted: boolean
+    validUser: boolean
 }
 
 const initialState: ReduxState = {
     loggedInUser: new User("legit@email.dk",undefined,undefined,"KEEEEYdsdsads"),
-    tilted: true,
+    validUser: false,
 }
 
 interface ReduxAction {
@@ -23,12 +23,12 @@ const userReducer = (state: ReduxState = initialState, action: any) => {
             console.log(newUser);
             console.log(state);
 
-            return {...state, tilted: !state.tilted, loggedInUser: newUser };
+            return {...state, loggedInUser: newUser };
         
         case SIGNIN:
             if (action.payload.registered == true){
             const fetchedUser = new User(action.payload.email,undefined,undefined,action.payload.idToken)
-                return {...state, tilted:!state.tilted, loggedInUser: fetchedUser}
+                return {...state, tilted: true, loggedInUser: fetchedUser}
             } else {
                 return state
             }
