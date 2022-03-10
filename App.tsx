@@ -34,12 +34,11 @@ const rootReducer = combineReducers({
   user: userReducer,
   // posts: PostReducer
 });
- // API KEY: AIzaSyCTlqXA4_sUNQzC7U4NGF2yKyhxOaMPNzA
- // https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
+
 const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 
 export default function App() {
-
+  
   return (
     <Provider store={store}>
 
@@ -47,8 +46,8 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name="Home" component={HomeScreen} />
-          {/* <Tab.Screen name="Discover" component={DiscoverScreen} /> */}
           <Tab.Screen name="Chat" component={ChatStackNavigator} />
+          {/* <Tab.Screen name="Discover" component={DiscoverScreen} /> */}
           {/* <Tab.Screen name="Menu" component={MenuScreen} /> */}
         </Tab.Navigator>
 

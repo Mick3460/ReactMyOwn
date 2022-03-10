@@ -1,5 +1,5 @@
 import { User } from "../../entities/User";
-import { SIGNUP } from "../actions/user.actions";
+import { SIGNUP, SIGNIN } from "../actions/user.actions";
 
 interface ReduxState {
     loggedInUser: User
@@ -7,7 +7,7 @@ interface ReduxState {
 }
 
 const initialState: ReduxState = {
-    loggedInUser: new User("lol@lololol.dk"),
+    loggedInUser: new User("legit@email.dk",undefined,undefined,"KEEEEYdsdsads"),
     tilted: true,
 }
 
@@ -19,14 +19,20 @@ interface ReduxAction {
 const userReducer = (state: ReduxState = initialState, action: any) => {
     switch (action.type) {
         case SIGNUP:
-            const newUser = new User(action.payload.email,undefined,undefined,undefined)
+            const newUser = new User(action.payload.email,undefined,undefined,action.payload.idToken)
             console.log(newUser);
             console.log(state);
-            
-            
-            
+
             return {...state, tilted: !state.tilted, loggedInUser: newUser };
-            
+        
+        case SIGNIN:
+            if (action.payload.registered == true){
+            const fetchedUser = new User(action.payload.email,undefined,undefined,action.payload.idToken)
+                return {...state, tilted:!state.tilted, loggedInUser: fetchedUser}
+            } else {
+                return state
+            }
+
         default: 
         console.log("Default switch");
         

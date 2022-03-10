@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function Screen2() {
     return (
         <View style={styles.container}>
-            <Text>Screen 2</Text>
+            <Text>Hvis du ser det her, så virker din funktion</Text>
         </View>
     );
 }
