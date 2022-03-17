@@ -36,7 +36,7 @@ export default function HomeScreen() {
    // This code is for it to run for the first time when your component mounts. 
    // Think of it as the previous componentDidMount function
    useEffect(() => {
-    test() //not really needed here.. But just for another time.
+    test //not really needed here.. But just for another time.
   }, []);
 
   // This code is for it to run whenever your variable, timerOn, changes
