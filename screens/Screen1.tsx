@@ -15,15 +15,16 @@ type ScreenNavigationType = NativeStackNavigationProp<
 export default function Screen1() {
     const navigation = useNavigation<ScreenNavigationType>()
     const [title, onChangeTitle] = React.useState('');
-
+    
+    const user = useSelector( (state:any) => state.user.loggedInUser )
     const isHappy = useSelector((state: any) => state.chat.isHappy) // subscribe to redux store and select attribute (isHappy)
     const chatrooms: Chatroom[] = useSelector((state: any) => state.chat.chatrooms)
 
     const dispatch = useDispatch()
 
     const handleAddChatroom = () => {
-        const chatroom: Chatroom = new Chatroom(title, Status.UNREAD, '', new Date());
-        dispatch(addChatroom(chatroom));
+        const chatroom: Chatroom = new Chatroom(title.substring(0,12), Status.UNREAD, title, new Date());
+        dispatch(addChatroom(chatroom,user));
     }
 
     const renderChatroom = ({ item }: { item: any }) => (
@@ -36,11 +37,13 @@ export default function Screen1() {
             <Button title="Go to screen 2" onPress={() => navigation.navigate("Screen2")} />
             <Text>{isHappy.toString()}</Text>
             <Button title="Toggle happy" onPress={() => dispatch(toggleHappy())} />
+            <Text>user id token er: </Text>
+            <Text>{user.idToken} </Text>
 
             <FlatList
                 data={chatrooms}
                 renderItem={renderChatroom}
-                keyExtractor={item => item.title} // chatroom titles must be unique when I do this.
+                //keyExtractor={item => item.id} // chatroom titles must be unique when I do this.
             />
 
             <TextInput

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 import { User } from '../entities/User';
 import { useDispatch, useSelector } from 'react-redux';
-import { signup, signin } from '../store/actions/user.actions';
+import { signup, signin, logout } from '../store/actions/user.actions';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../typings/navigations';
@@ -23,26 +23,22 @@ export default function HomeScreen() {
     const [loginPw, setLoginPw] = useState('')
     const user: User = useSelector((state: any) => state.user.loggedInUser) // subscribe to redux store and select attribute (isHappy)
     const validUser = useSelector((state: any) => state.user.validUser) // subscribe to redux store and select attribute (isHappy)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch() //useDispatch er en hook :)
     
     const Stack = createNativeStackNavigator<StackParamList>();
     const Tab = createBottomTabNavigator();
     const navigation = useNavigation<ScreenNavigationType>()
 
-    function test() {
-        console.log("FUNCTION CALLED TO FUCKING SWAP PAGE")
-    }
-
    // This code is for it to run for the first time when your component mounts. 
    // Think of it as the previous componentDidMount function
    useEffect(() => {
-    test //not really needed here.. But just for another time.
+     //not really needed here.. But just for another time.
   }, []);
 
   // This code is for it to run whenever your variable, timerOn, changes
   useEffect(() => {
     if (validUser) {
-      test();
+    console.log("FUNCTION CALLED TO FUCKING SWAP PAGE")
       navigation.navigate("Screen1");
     }
   }, [validUser]); // The second parameters are the variables this useEffect is listening to for changes.
@@ -62,9 +58,12 @@ export default function HomeScreen() {
         dispatch(signin(email,pw))
         componentDidMount()
     }
+    function handleLogOut(){
+        dispatch(logout())
+    }
  
     function componentDidMount(){
-        console.log("TEST FOR AT DET SKER");
+        console.log("component did laucnh, called after handleSignIn.. why is this here again?");
     }
    
     return (
@@ -78,7 +77,8 @@ export default function HomeScreen() {
             
             <Text>Below is the current user email and id token:</Text> 
             <Text>{user.email}</Text>
-            <Text>{user.idToken}</Text>
+            <Text style={{fontSize: 4, width:300}}>{user.idToken}</Text>
+            <Text>LIGE NU ER DIN BRUGER HARDCODED, LOG IND FØRSTE GANG</Text>
             <Text>Is Michael happy? .. {validUser.toString()} {"\n"} {"\n"} {"\n"} {"\n"}</Text>
             <Text>Log in using social networks {"\n"} {"\n"}</Text>
         <View style={styles.iconsDiv}>
@@ -111,6 +111,7 @@ export default function HomeScreen() {
             <TouchableOpacity onPress={handleSignIn} style={styles.appButtonContainerLeft}>
                 <Text style={styles.appButtonTextLeft}>SIGN IN</Text>
             </TouchableOpacity>
+            <Button onPress={handleLogOut} title="log out"/>
             </View>
             
             </View>

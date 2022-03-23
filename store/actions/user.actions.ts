@@ -1,7 +1,16 @@
+import { FirebaseSignupSuccess } from "../../entities/FirebaseSignupSuccess";
 
 export const SIGNUP = 'SIGNUP';
 export const SIGNIN = 'SIGNIN';
- 
+export const LOGOUT = 'LOGOUT'
+
+export const logout = () => {
+    return {type: LOGOUT}
+}
+
+/*
+const token = getState().user.token; //if you have a reducer named user (from our combineReducers)
+*/
 
 export const signin = (email: string, password: string) => {
     const KEY = "AIzaSyCTlqXA4_sUNQzC7U4NGF2yKyhxOaMPNzA";
@@ -9,7 +18,8 @@ export const signin = (email: string, password: string) => {
 
     return async (dispatch: (arg0: { type: string; payload: any; }) => void) => {
         const response = await fetch(url, {
-         
+          //redux Thunk makes it possible to return an async function instead of just an action
+          //this way we can make fetches without breaking the redux-flow protocols.
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -28,7 +38,7 @@ export const signin = (email: string, password: string) => {
             console.log("response problem. remember valid email and pw with numbers");
             
         } else {
-            const data = await response.json(); // json to javascript
+            const data: FirebaseSignupSuccess = await response.json(); // json to javascript
             console.log("Data from the server ", data);
             
             dispatch({type: SIGNIN, payload: {email: data.email, idToken: data.idToken, registered: data.registered}})
@@ -62,7 +72,7 @@ export const signup = (email : string, password : string) => {
            console.log("response problem. remember valid email and pw with numbers");
            
        } else {
-           const data = await response.json(); // json to javascript
+           const data: FirebaseSignupSuccess = await response.json(); // json to javascript
            console.log("Data from the server ", data);
            
            dispatch({type: SIGNUP, payload: {email: data.email, idToken: data.idToken}})
