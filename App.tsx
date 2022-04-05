@@ -47,6 +47,7 @@ const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 
 export default function App() {
   ChatStackNavigator()
+  HomeChatStackNavigator()
   return (
     <Provider store={store}>
       
