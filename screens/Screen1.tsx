@@ -44,7 +44,6 @@ export default function Screen1() {
     }
 
     const handleFetchChatroom = () => {
-        console.log("test")
         dispatch(fetchChatroom(user))
     }
 

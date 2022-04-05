@@ -4,10 +4,16 @@ import { User } from "../../entities/User";
 export const TOGGLE_HAPPY = 'TOGGLE_HAPPY';
 export const ADD_CHATROOM = 'ADD_CHATROOM';
 export const FETCHCHAT = 'FETCHCHAT';
+export const LOGOUT = 'LOGOUT';
+export const chatRoomURL = 'https://cbsfirstfb-default-rtdb.europe-west1.firebasedatabase.app/chatrooms.json?auth='
 
 export const toggleHappy = () => {
     return { type: TOGGLE_HAPPY };
 };
+
+export const logOut = () => {
+    return { type: LOGOUT } ;
+}
 
 export const addChatroom = (chatroom: Chatroom, user: User) => {
     // indsæt getState: any i dispatchen for at få den næste kommentar til at være valid
@@ -15,7 +21,7 @@ export const addChatroom = (chatroom: Chatroom, user: User) => {
         //const tooken = getState().user.idToken; KUNNE BRUGES ISTEDET FOR AT SENDE USER MED VIDERE.
         const KEY = user.idToken;
         console.log("key: ", KEY)
-        const url = "https://cbsfirstfb-default-rtdb.europe-west1.firebasedatabase.app/chatrooms.json?auth="+KEY;
+        const url = chatRoomURL+KEY;
         
         const response = await fetch(url, {
             //redux Thunk makes it possible to return an async function instead of just an action
@@ -48,8 +54,9 @@ export const fetchChatroom = (user: User) => {
     return async (dispatch: (arg0: { type: string; payload: any;}) => void) => {
         //const tooken = getState().user.idToken; KUNNE BRUGES ISTEDET FOR AT SENDE USER MED VIDERE.
         const KEY = user.idToken;
-        const url = "https://cbsfirstfb-default-rtdb.europe-west1.firebasedatabase.app/chatrooms.json?auth="+KEY;
-        
+        const url = chatRoomURL+KEY;
+            //delete chatroom.id KUNNE BRUGES TIL AT FJERNE ET ID, NÅR MAN SKAL OPDATERE.
+
         const response = await fetch(url, {
             //redux Thunk makes it possible to return an async function instead of just an action
             //this way we can make fetches without breaking the redux-flow protocols.

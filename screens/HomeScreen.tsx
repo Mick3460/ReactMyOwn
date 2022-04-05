@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Screen1 from './Screen1';
 import Screen2 from './Screen2';
 import Screen3 from './Screen3';
+import { logOut } from '../store/actions/chat.actions';
 
 type ScreenNavigationType = NativeStackNavigationProp<
     StackParamList,
@@ -38,7 +39,7 @@ export default function HomeScreen() {
   // This code is for it to run whenever your variable, timerOn, changes
   useEffect(() => {
     if (validUser) {
-    console.log("FUNCTION CALLED TO FUCKING SWAP PAGE")
+    console.log("FUNCTION CALLED TO SWAP PAGE")
       navigation.navigate("Screen1");
     }
   }, [validUser]); // The second parameters are the variables this useEffect is listening to for changes.
@@ -59,7 +60,8 @@ export default function HomeScreen() {
         componentDidMount()
     }
     function handleLogOut(){
-        dispatch(logout())
+        dispatch(logout()) // user-clearing method
+        dispatch(logOut()) // chat-clearing method
     }
  
     function componentDidMount(){
@@ -76,10 +78,10 @@ export default function HomeScreen() {
             <Button title="Go to screen 2" onPress={() => navigation.navigate("Screen2")} />
             
             <Text>Below is the current user email and id token:</Text> 
-            <Text>{user.email}</Text>
-            <Text style={{fontSize: 4, width:300}}>{user.idToken}</Text>
+            <Text>{user?.email}</Text>
+            <Text style={{fontSize: 4, width:300}}>{user?.idToken}</Text>
             <Text>LIGE NU ER DIN BRUGER HARDCODED, LOG IND FØRSTE GANG</Text>
-            <Text>Is Michael happy? .. {validUser.toString()} {"\n"} {"\n"} {"\n"} {"\n"}</Text>
+            <Text>Is Michael happy? .. {validUser?.toString()} {"\n"} {"\n"} {"\n"} {"\n"}</Text>
             <Text>Log in using social networks {"\n"} {"\n"}</Text>
         <View style={styles.iconsDiv}>
             <TouchableOpacity onPress={() => {console.log("FACEBOOK")}}>
@@ -147,7 +149,6 @@ const styles = StyleSheet.create({
         
         width: '70%',
         height: '100%',
-        float: 'left',
 
         alignItems: 'center',
         justifyContent: 'center',
@@ -158,7 +159,6 @@ const styles = StyleSheet.create({
         
         width: '30%',
         height: '100%',
-        float: 'right',
 
         alignItems: 'center',
         justifyContent: 'center',

@@ -1,5 +1,5 @@
 import { Chatroom } from "../../entities/Chatroom";
-import { ADD_CHATROOM, FETCHCHAT, TOGGLE_HAPPY } from "../actions/chat.actions";
+import { ADD_CHATROOM, FETCHCHAT, TOGGLE_HAPPY, LOGOUT } from "../actions/chat.actions";
 
 interface ReduxState {
     chatrooms: Chatroom[]
@@ -32,6 +32,8 @@ const chatReducer = (state: ReduxState = initialState, action: ReduxAction) => {
         case FETCHCHAT:
             return {...state, chatrooms: action.payload }
 
+        case LOGOUT:
+            return {...state, chatrooms: []}
         default:
             return state;
     }

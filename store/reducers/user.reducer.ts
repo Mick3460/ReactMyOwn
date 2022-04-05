@@ -1,5 +1,6 @@
 import { User } from "../../entities/User";
 import { SIGNUP, SIGNIN, LOGOUT } from "../actions/user.actions";
+import * as SecureStore from 'expo-secure-store';
 
 interface ReduxState {
     loggedInUser: User
@@ -7,7 +8,7 @@ interface ReduxState {
 }
 
 const initialState: ReduxState = {
-    loggedInUser: new User("lol@lol.dk",undefined,undefined,"eyJhbGciOiJSUzI1NiIsImtpZCI6ImIwNmExMTkxNThlOGIyODIxNzE0MThhNjdkZWE4Mzc0MGI1ZWU3N2UiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY2JzZmlyc3RmYiIsImF1ZCI6ImNic2ZpcnN0ZmIiLCJhdXRoX3RpbWUiOjE2NDgwNjAzODcsInVzZXJfaWQiOiJWcVFodVRmNUdnZzFNUlh5MEI5TjVLekhsNTQzIiwic3ViIjoiVnFRaHVUZjVHZ2cxTVJYeTBCOU41S3pIbDU0MyIsImlhdCI6MTY0ODA2MDM4NywiZXhwIjoxNjQ4MDYzOTg3LCJlbWFpbCI6ImxvbEBsb2wuZGsiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibG9sQGxvbC5kayJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.J_rCGB92JIOMdXbpyEVJrxJKMi1BbNfT2l5JC7OB9RWwKojAAtPR81vApCuY3rbxArUKmlvEWrDE3o533GCge1eP7ySB2QMcrkm68vRjpwkdxhD4WPFc1oKeyibmYQSMHcCayso3ri9bopVT43kh9vBpk4VToaKmjs3I6zaRNbiGPk8yA9gMMmBtyJDXDMparsMykh55UrqUHSjYtKgN-bB0OiP2OwUmtdT4ESHEsAY4NmHfgiTvz8NbHAo0ilpUzVLxpB4t6J4FtlZLTSgHFeXyGxU9gBF_Yr9stQzc1oQX7RhfTxjr_P3rCXg4Ob67NIg_OA0SRN-ESvgX8g9PkQ"),
+    loggedInUser: new User("lol@lol.dk",undefined,undefined,"eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ2NDExN2FjMzk2YmM3MWM4YzU5ZmI1MTlmMDEzZTJiNWJiNmM2ZTEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY2JzZmlyc3RmYiIsImF1ZCI6ImNic2ZpcnN0ZmIiLCJhdXRoX3RpbWUiOjE2NDg2MjU1OTcsInVzZXJfaWQiOiI3Y0dOa1ZYV1FtWFFWOUpsVDlROWQ0VDR1MG4xIiwic3ViIjoiN2NHTmtWWFdRbVhRVjlKbFQ5UTlkNFQ0dTBuMSIsImlhdCI6MTY0ODYyNTU5NywiZXhwIjoxNjQ4NjI5MTk3LCJlbWFpbCI6ImRhZ3RvQGxvbC5kayIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJkYWd0b0Bsb2wuZGsiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.VpKvPQbtEJX4pkBn9bk1txzNwDcwMPWuPY3KIqoqVMqYprINo0-Vatq61J8csGirVf3pS6B38hMm0deChm9vLsUo0DG_uJXjS0z3CbGsPMKD_-pedelaQQkbfRZxrsfL8anu46Z_Nr3KefPEuaowJXajBmT6OpJjqRJtLuSEHMxT7s-_MgL2lWmMHSRFkESyWo12vhT9S4IXCDZ3xmpDyF53_zPzx2mwfdrhZ-x_BIgen6qy-8ObPGmvsK-aK7gFMUZziJXcFNmU59L7p83axr1HgIrF9kZjkefiKH3dA0dWf6ZhusxI9RBTXrmEqX7yqVtW_xWsgCFM5nbzAl2mQQ"),
     validUser: false,
 }
 
@@ -16,7 +17,22 @@ interface ReduxAction {
     payload?: boolean | number | string 
 }
 
-const userReducer = (state: ReduxState = initialState, action: any) => {
+async function save(key: any, value:any) {
+    await SecureStore.setItemAsync(key, value);
+    console.log(key)
+    console.log(value)
+  }
+
+async function getValueFor(key:any) {
+let result = await SecureStore.getItemAsync(key);
+if (result) {
+    alert("🔐 Here's your value 🔐 \n" + result);
+} else {
+    alert('No values stored under that key.');
+}
+}
+
+const userReducer = async (state: ReduxState = initialState, action: any) => {
     switch (action.type) {
         case SIGNUP:
             const newUser = new User(action.payload.email,undefined,undefined,action.payload.idToken)
@@ -25,6 +41,11 @@ const userReducer = (state: ReduxState = initialState, action: any) => {
         case SIGNIN:
             if (action.payload.registered == true){
             const fetchedUser = new User(action.payload.email,undefined,undefined,action.payload.idToken)
+
+            //save in SecureStorage
+            await save("lol",action.payload.idToken)
+
+
                 return {...state, validUser: true, loggedInUser: fetchedUser}
             
             } else {
@@ -33,7 +54,7 @@ const userReducer = (state: ReduxState = initialState, action: any) => {
 
         case LOGOUT:
             console.log("Log out case reached")
-            return { ...state, validUser: false, loggedInUser: "" }
+            return { ...state, validUser: false, loggedInUser: "", chatrooms: [] }
 
         default: 
             return state;

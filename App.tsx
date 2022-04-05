@@ -12,7 +12,7 @@ import chatReducer from './store/reducers/chat.reducer';
 import userReducer from './store/reducers/user.reducer';
 import { StackParamList } from "./typings/navigations";
 import ReduxThunk from 'redux-thunk'
-
+import * as SecureStore from 'expo-secure-store'; //might not need
 
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator();
@@ -55,6 +55,7 @@ export default function App() {
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name="Home" component={HomeChatStackNavigator} />
           <Tab.Screen name="Chat" component={ChatStackNavigator} />
+          {/* <Tab.Screen name="Chat" component={ChatStackNavigator} /> */}
           {/* <Tab.Screen name="Discover" component={DiscoverScreen} /> */}
           {/* <Tab.Screen name="Menu" component={MenuScreen} /> */}
         </Tab.Navigator>
