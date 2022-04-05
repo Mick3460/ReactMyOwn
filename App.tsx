@@ -38,8 +38,8 @@ function HomeChatStackNavigator() {
 
 
 const rootReducer = combineReducers({
-  chat: chatReducer,
   user: userReducer,
+  chat: chatReducer,
   // posts: PostReducer
 });
 
@@ -55,6 +55,7 @@ export default function App() {
         <Tab.Navigator screenOptions={{ headerShown: false }}>
           <Tab.Screen name="Home" component={HomeChatStackNavigator} />
           <Tab.Screen name="Chat" component={ChatStackNavigator} />
+          <Tab.Screen name="Screen2" component={Screen2} />
           {/* <Tab.Screen name="Chat" component={ChatStackNavigator} /> */}
           {/* <Tab.Screen name="Discover" component={DiscoverScreen} /> */}
           {/* <Tab.Screen name="Menu" component={MenuScreen} /> */}

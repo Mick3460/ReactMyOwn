@@ -40,7 +40,7 @@ export const signin = (email: string, password: string) => {
             
         } else {
             const data: FirebaseSignupSuccess = await response.json(); // json to javascript
-            console.log("Data from the server ", data);
+            console.log("Data from the server user.actions:  ", data);
             
             dispatch({type: SIGNIN, payload: {email: data.email, idToken: data.idToken, registered: data.registered}})
         }
@@ -74,7 +74,7 @@ export const signup = (email : string, password : string) => {
            
        } else {
            const data: FirebaseSignupSuccess = await response.json(); // json to javascript
-           console.log("Data from the server ", data);
+           console.log("Data from the server in user.actions: ", data);
            
            dispatch({type: SIGNUP, payload: {email: data.email, idToken: data.idToken}})
        }

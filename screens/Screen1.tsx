@@ -69,7 +69,7 @@ export default function Screen1() {
     return (
         <View style={styles.container}>
             <Text>user id token er: </Text>
-            <Text style={{fontSize: 4, width:300}}>{user.idToken} </Text>
+            <Text style={{fontSize: 4, width:300}}>{user?.idToken} </Text>
 
             <FlatList
                 style={styles.theList}

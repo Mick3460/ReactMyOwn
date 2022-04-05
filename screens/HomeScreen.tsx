@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 import { User } from '../entities/User';
 import { useDispatch, useSelector } from 'react-redux';
-import { signup, signin, logout } from '../store/actions/user.actions';
+import { signin, logout } from '../store/actions/user.actions';
 import { useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../typings/navigations';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Screen1 from './Screen1';
-import Screen2 from './Screen2';
-import Screen3 from './Screen3';
+
 import { logOut } from '../store/actions/chat.actions';
 
 type ScreenNavigationType = NativeStackNavigationProp<
@@ -18,124 +15,104 @@ type ScreenNavigationType = NativeStackNavigationProp<
 >
 
 export default function HomeScreen() {
-    const [text, setText] = useState('')
-    const [passwordStr, setPasswordStr] = useState('')
     const [loginText, setLoginText] = useState('')
     const [loginPw, setLoginPw] = useState('')
-    const user: User = useSelector((state: any) => state.user.loggedInUser) // subscribe to redux store and select attribute (isHappy)
-    const validUser = useSelector((state: any) => state.user.validUser) // subscribe to redux store and select attribute (isHappy)
+    const user: User = useSelector((state: any) => state.user.loggedInUser) // subscribe to redux store and select attribute 
+    const validUser = useSelector((state: any) => state.user.validUser) // subscribe to redux store and select attribute 
+    const isHappy = useSelector((state: any) => state.chat.isHappy) // subscribe to redux store and select attribute (isHappy)
     const dispatch = useDispatch() //useDispatch er en hook :)
     
-    const Stack = createNativeStackNavigator<StackParamList>();
-    const Tab = createBottomTabNavigator();
+    //const Stack = createNativeStackNavigator<StackParamList>();
+    //const Tab = createBottomTabNavigator();
     const navigation = useNavigation<ScreenNavigationType>()
 
    // This code is for it to run for the first time when your component mounts. 
    // Think of it as the previous componentDidMount function
-   useEffect(() => {
+    useEffect(() => {
      //not really needed here.. But just for another time.
-  }, []);
+    }, []);
 
   // This code is for it to run whenever your variable, timerOn, changes
-  useEffect(() => {
-    if (validUser) {
-    console.log("FUNCTION CALLED TO SWAP PAGE")
-      navigation.navigate("Screen1");
-    }
-  }, [validUser]); // The second parameters are the variables this useEffect is listening to for changes.
+   useEffect(() => {
+        if (validUser) {
+        console.log("FUNCTION CALLED TO SWAP PAGE")
+        navigation.navigate("Screen1");
+        }
+    }, [validUser]); // The second parameters are the variables this useEffect is listening to for changes.
 
 
-    function handleAddUser () {
-        const email = text;
-        const pw = passwordStr;
-        
-        dispatch(signup(email,pw));
-    }
-
-    function handleSignIn () {
+    async function handleSignIn () {
         const email = loginText;
         const pw = loginPw;
 
         dispatch(signin(email,pw))
-        componentDidMount()
     }
+
     function handleLogOut(){
         dispatch(logout()) // user-clearing method
         dispatch(logOut()) // chat-clearing method
     }
- 
-    function componentDidMount(){
-        console.log("component did laucnh, called after handleSignIn.. why is this here again?");
-    }
-   
+
     return (
         
-        <View style={styles.container}>
-          
-            <View style={styles.leftOuterBox}>
+    <View style={styles.container}>
+        
+        <View style={styles.leftOuterBox}>
             <Text style={styles.hugeText}>Home Screen</Text>
-            
-            <Button title="Go to screen 2" onPress={() => navigation.navigate("Screen2")} />
-            
-            <Text>Below is the current user email and id token:</Text> 
             <Text>{user?.email}</Text>
             <Text style={{fontSize: 4, width:300}}>{user?.idToken}</Text>
             <Text>LIGE NU ER DIN BRUGER HARDCODED, LOG IND FØRSTE GANG</Text>
-            <Text>Is Michael happy? .. {validUser?.toString()} {"\n"} {"\n"} {"\n"} {"\n"}</Text>
-            <Text>Log in using social networks {"\n"} {"\n"}</Text>
-        <View style={styles.iconsDiv}>
-            <TouchableOpacity onPress={() => {console.log("FACEBOOK")}}>
-                <Image
-                source={require('../assets/facebook2.png')}
-                style={styles.icon}
-                />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {console.log("GOOGLE")}}>    
-                <Image
-                source={require('../assets/googleIcon.png')}
-                style={styles.icon}
-                />
-            </TouchableOpacity>
-        </View>
+            <Text>Is Michael happy? .. {validUser?.toString()}  </Text>
+            <Text>Is Michael happy? .. {isHappy?.toString()}  </Text>
+                       
+            <Button title="Sign up" onPress={() => navigation.navigate("Screen2" )} />
+            
+            <Text>Below is the current user email and id token:</Text> 
+          
         
-            <View style={{flexDirection: 'row', alignItems: 'center', width: '30%',paddingTop: '20px'}}>
-                <View style={{flex: 1, height: 1, backgroundColor: 'black'}}/> 
-                <View>
-                    <Text style={{width: 50, textAlign: 'center'}}>or</Text>
-                </View>
-                <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+        <Text>Log in using social networks</Text>
+
+        {/**IKONER TIL GOOGLE OG FACEBOOK */}
+            <View style={styles.iconsDiv}>
+                <TouchableOpacity onPress={() => {console.log("FACEBOOK")}}>
+                    <Image
+                    source={require('../assets/facebook2.png')}
+                    style={styles.icon}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {console.log("GOOGLE")}}>    
+                    <Image
+                    source={require('../assets/googleIcon.png')}
+                    style={styles.icon}
+                    />
+                </TouchableOpacity>
             </View>
 
+        {/*OR divider */}
+        <View style={{flexDirection: 'row', alignItems: 'center', paddingTop: 20}}>
+                <View style={{flex: 1, height: 1, backgroundColor: 'black'}}/> 
+                <View><Text style={{width: 50, textAlign: 'center'}}>or</Text></View>
+                <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+        </View>
 
-            <View style={{paddingTop: 30}}> 
+        {/*Email, Password textfields with sign in and logout buttons */}
+        <View style={{paddingTop: 30}}>
             <TextInput value={loginText} onChangeText={setLoginText} style={styles.textInput} placeholder="Email" />
             <TextInput value={loginPw} secureTextEntry={true} onChangeText={setLoginPw} style={styles.textInput} placeholder="Password" />
             <TouchableOpacity onPress={handleSignIn} style={styles.appButtonContainerLeft}>
-                <Text style={styles.appButtonTextLeft}>SIGN IN</Text>
-            </TouchableOpacity>
+                    <Text style={styles.appButtonTextLeft}>SIGN IN</Text>
+                </TouchableOpacity>
             <Button onPress={handleLogOut} title="log out"/>
-            </View>
-            
-            </View>
-            <View style={styles.rightOuterBox}>
-            <View style={styles.allOfSignup}>
-            <View><Text style={styles.bigText}>New member? Sign up! </Text> </View>
-                <View style={styles.signupBox}>
-                    <TextInput value={text} onChangeText={setText} style={styles.textInput} placeholder="Email" />
-                    <TextInput value={passwordStr} secureTextEntry={true} onChangeText={setPasswordStr} style={styles.textInput} placeholder="Password" />
-                </View>
-                
-                <TouchableOpacity onPress={handleAddUser} style={styles.appButtonContainerRight}>
-                <Text style={styles.appButtonTextRight}>SIGN UP</Text>
-                 </TouchableOpacity>
-            </View>
-            </View>
+        </View>
 
         </View>
+        </View> 
+   
     );
 }
 
 const styles = StyleSheet.create({
+   
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -147,7 +124,7 @@ const styles = StyleSheet.create({
     leftOuterBox: {
         backgroundColor: '#FDE7E2',
         
-        width: '70%',
+        width: '100%',
         height: '100%',
 
         alignItems: 'center',
@@ -186,6 +163,8 @@ const styles = StyleSheet.create({
         padding: 2,
         margin: 1,
         marginBottom: 3,
+        width: 200,
+
     },
 
     bigText: {
@@ -196,7 +175,7 @@ const styles = StyleSheet.create({
         fontSize: 40,
     },
     iconsDiv: {
-        width: '10%',
+        width: '30%',
         flexDirection:'row',
         alignItems:'center',
         justifyContent: 'space-evenly',
@@ -204,11 +183,9 @@ const styles = StyleSheet.create({
     },
 
     icon: {
-
-        width: '40px', 
-        height: '40px', 
+        width: 40, 
+        height: 40, 
         borderRadius: 20,
-        
     },
 
     appButtonContainerLeft: {
