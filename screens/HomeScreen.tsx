@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 import { User } from '../entities/User';
 import { useDispatch, useSelector } from 'react-redux';
-import { signin, logout } from '../store/actions/user.actions';
+import { signin, logout, rehydrateUser } from '../store/actions/user.actions';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../typings/navigations';
-
+import * as SecureStore from 'expo-secure-store'
 import { logOut } from '../store/actions/chat.actions';
 
 type ScreenNavigationType = NativeStackNavigationProp<
@@ -22,29 +22,46 @@ export default function HomeScreen() {
     const isHappy = useSelector((state: any) => state.chat.isHappy) // subscribe to redux store and select attribute (isHappy)
     const dispatch = useDispatch() //useDispatch er en hook :)
     
+    async function readPersistedUserInfo() {
+        const idToken = await SecureStore.getItemAsync('token');
+        const userJson = await SecureStore.getItemAsync('user');
+        let user = null; //bad code?
+        if (userJson) {
+            user = JSON.parse(userJson)
+        }
+        if (user) {
+            //then we've had someone log in before..
+            //restore the signup by updating the redux store based on user and token
+            dispatch(rehydrateUser(user,idToken!))  //Hvis du er sikker på den IKKE er null, så kan du skrive variable! 
+
+        }
+        
+      }
+
+
     //const Stack = createNativeStackNavigator<StackParamList>();
     //const Tab = createBottomTabNavigator();
     const navigation = useNavigation<ScreenNavigationType>()
 
+    
    // This code is for it to run for the first time when your component mounts. 
    // Think of it as the previous componentDidMount function
     useEffect(() => {
-     //not really needed here.. But just for another time.
+     readPersistedUserInfo
     }, []);
 
   // This code is for it to run whenever your variable, timerOn, changes
    useEffect(() => {
-        if (validUser) {
+        if (user) {
         console.log("FUNCTION CALLED TO SWAP PAGE")
         navigation.navigate("Screen1");
         }
-    }, [validUser]); // The second parameters are the variables this useEffect is listening to for changes.
+    }, [user]); // The second parameters are the variables this useEffect is listening to for changes.
 
 
     async function handleSignIn () {
         const email = loginText;
         const pw = loginPw;
-
         dispatch(signin(email,pw))
     }
 

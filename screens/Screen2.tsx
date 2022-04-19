@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
         padding: 2,
         margin: 1,
         marginBottom: 3,
+        width: 220,
     },
 
     bigText: {

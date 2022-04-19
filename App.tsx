@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { Provider } from 'react-redux';
@@ -13,7 +12,7 @@ import userReducer from './store/reducers/user.reducer';
 import { StackParamList } from "./typings/navigations";
 import ReduxThunk from 'redux-thunk'
 import * as SecureStore from 'expo-secure-store'; //might not need
-
+import NavigationComp from './components/NavigationComp';
 const Stack = createNativeStackNavigator<StackParamList>();
 const Tab = createBottomTabNavigator();
 
@@ -26,16 +25,6 @@ function ChatStackNavigator() {
     </Stack.Navigator>
   );
 }
-function HomeChatStackNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Homescreen" component={HomeScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Screen1" component={Screen1} options={{ headerShown: false }} />
-    </Stack.Navigator>
-  );
-}
-
-
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -43,28 +32,15 @@ const rootReducer = combineReducers({
   // posts: PostReducer
 });
 
+export type RootState = ReturnType<typeof rootReducer>
+
 const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 
 export default function App() {
   ChatStackNavigator()
-  HomeChatStackNavigator()
   return (
     <Provider store={store}>
-      
-
-      <NavigationContainer>
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name="Home" component={HomeChatStackNavigator} />
-          <Tab.Screen name="Chat" component={ChatStackNavigator} />
-          <Tab.Screen name="Screen2" component={Screen2} />
-          {/* <Tab.Screen name="Chat" component={ChatStackNavigator} /> */}
-          {/* <Tab.Screen name="Discover" component={DiscoverScreen} /> */}
-          {/* <Tab.Screen name="Menu" component={MenuScreen} /> */}
-        </Tab.Navigator>
-
-
-
-      </NavigationContainer>
+      <NavigationComp></NavigationComp>
     </Provider>
   )
 }
